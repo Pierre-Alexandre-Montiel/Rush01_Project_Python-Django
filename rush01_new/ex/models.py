@@ -1,11 +1,27 @@
 from django.db import models
-
 from django.contrib import auth
 from django import forms  
 from django.contrib.auth.models import User  
 from django.contrib.auth.forms import UserCreationForm  
 from django.core.exceptions import ValidationError  
 from django.forms.forms import Form
+from django.contrib.auth.models import AbstractUser
+
+class Post(models.Model):
+    title = models.CharField(max_length=64)
+    author = models.CharField(max_length=64)
+    created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    content = models.TextField()
+
+class Comment(models.Model):
+    author = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    content = models.TextField()
+
+class UserDescrip(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    description = models.TextField()
+    picture = models.ImageField(upload_to='images')
 
 class CustomUserCreationForm(UserCreationForm):  
     username = forms.CharField(label='username')  
@@ -28,9 +44,8 @@ class CustomUserCreationForm(UserCreationForm):
         return password2  
   
     def save(self, commit = True):  
-        print('ICI')
         user = User.objects.create_user(  
             self.cleaned_data['username'], None,
             self.cleaned_data['password1']  
-        )  
+        )
         return user

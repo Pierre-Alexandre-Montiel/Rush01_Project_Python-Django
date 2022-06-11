@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<nav>
+		<ol>
+					<li><a href="/log">Home</a></li>
+  		      		<li><a>Logged as {{user}}</a></li>
+  		      		<li><a href="/logout/">Logout</a></li>
+					<li><a href="{% url 'profile' pk=user.id %}">Your Profile</a></li>
+					{% if user.is_staff%}
+  		      		<li><a href="/staff/">Staff</a></li>
+					{% endif %}
+
+  	  	</ol>
+	</nav>
+	<body>
+		<h1>POST PAGE</h1>
+			<br>
+				<table>
+				{% for i in object_list|dictsortreversed:"created" %}   
+					<tr>
+					<th>TITLE = </th>
+    				<td>{{i.title}}</td> 
+					</tr>
+					<tr>
+					<th>AUTHOR = </th>
+    				<td>{{i.author}}</td> 
+					</tr>
+					<tr>
+					<th>CREATED = </th>
+    				<td>{{i.created}}</td> 
+					</tr>
+					<tr>
+					<th>SYNOPSIS = </th>
+    				<td>{{ i.synopsis|truncatechars:20 }}</td> 
+					</tr>
+					<th>PUBLIED SINCE = </th>
+    				<td>{{ i.created|timesince }}</td> 
+					</tr>
+				{% endfor %} 
+				</table>
+	</body>
+</head>
+</html>
