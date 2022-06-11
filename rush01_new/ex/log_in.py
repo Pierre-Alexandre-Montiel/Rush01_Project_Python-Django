@@ -1,6 +1,7 @@
 from django import forms
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from .models import Comment
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 
@@ -14,5 +15,10 @@ class UpdateUser(forms.Form):
     email = forms.EmailField()
     description = forms.CharField(widget=forms.Textarea)
     picture = forms.FileField()
+
+class PubliForm(forms.ModelForm):
+    class Meta:
+        model= Comment
+        fields = ["content"]
 
     

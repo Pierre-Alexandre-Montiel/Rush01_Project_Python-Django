@@ -30,4 +30,5 @@ urlpatterns = [
     path('edit/?P<int:pk>/',views.Details.as_view(), name='edit'),
     path('populate/', views.Populate.as_view(), name='populate'),
      path('forums/', views.PostDisplay.as_view(), name='forum'),
+    path('details/?P<int:pk>/',views.Publish.as_view(), name='details'),
 ]

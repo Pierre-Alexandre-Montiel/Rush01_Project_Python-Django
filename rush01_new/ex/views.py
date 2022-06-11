@@ -2,20 +2,50 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .models import User
-from .models import Post
+from .models import Comment, Post
 from .models import UserDescrip
 from django.views.generic import DetailView, ListView, FormView, CreateView
 from django.contrib.auth import authenticate, login, logout
 from .log_in import LogForm
 from .log_in import UpdateUser
+from .log_in import PubliForm
 from django.contrib import auth
 from .models import CustomUserCreationForm
 from django.core.exceptions import ValidationError
+
+class Publish(FormView):
+    model = Comment
+    template_name =  "details_post.html"
+    form_class = PubliForm
+
+    def get(self, request, pk):
+        post = Post.objects.get(id=pk) 
+        form = PubliForm()
+        com = Comment.objects.filter(post_id= pk)
+        return render(request, "details_post.html", {'post':post, "form":form, "com":com})
+
+    def post(self, request, pk):
+        if request.user.is_authenticated: 
+            form = PubliForm(request.POST)
+            if form.is_valid():
+                content = form.cleaned_data['content']
+                post = Post.objects.get(id=pk)
+                save = Comment(
+                    content = content,
+                    author = request.user,
+                    post = post
+                )
+                save.save()
+        com = Comment.objects.filter(post_id= pk)
+        return render(request, "details_post.html", {'post':post, "form":form, "com":com})
 
 class PostDisplay(ListView):
     model = Post
     template_name = 'article.html'
 
+class DetailsPost(DetailView):
+    model = Post
+    template_name = 'details_post.html'
 
 class Details(FormView):
     #model = User
@@ -90,7 +120,7 @@ def Admin(request, pk):
     t.save()
     return render(request, "staff.html", {'f':user, "id":id})
 
-def user_profile(request, pk):
+def user_profile(request):
     id = request.user.id
     user = User.objects.get(id=id)
     des = UserDescrip.objects.filter(user_id=id)
@@ -154,21 +184,21 @@ class Populate(ListView):
         save = Post(
             title = 'The Phantom Menace',
             author =   a,
-            synopsis =  'Rick McCallum',
+            content =  'Rick McCallum',
             created = '1999-05-19'
         )
         save.save()
         save = Post(
             title = 'Attack of the Clones',
             author =  a,
-            synopsis =  'Rick McCallum',
+            content =  'Rick McCallum',
             created = '2002-05-16'
         )
         save.save()
         save = Post(
             title = 'Revenge of the Sith',
            author =  a,
-            synopsis =  'Rick McCallum',
+            content =  'Rick McCallum',
             created  = '2005-05-19'
         )
         save.save()

@@ -6,7 +6,6 @@
 					<li><a href="/log">Home</a></li>
   		      		<li><a>Logged as {{user}}</a></li>
   		      		<li><a href="/logout/">Logout</a></li>
-					<li><a href="{% url 'profile' pk=user.id %}">Your Profile</a></li>
 					{% if user.is_staff%}
   		      		<li><a href="/staff/">Staff</a></li>
 					{% endif %}
@@ -17,7 +16,7 @@
 		<h1>POST PAGE</h1>
 			<br>
 				<table>
-				{% for i in object_list|dictsortreversed:"created" %}   
+				{% for i in object_list %}   
 					<tr>
 					<th>TITLE = </th>
     				<td>{{i.title}}</td> 
@@ -32,11 +31,14 @@
 					</tr>
 					<tr>
 					<th>SYNOPSIS = </th>
-    				<td>{{ i.synopsis|truncatechars:20 }}</td> 
+    				<td>{{ i.content|truncatechars:20 }}</td> 
 					</tr>
 					<th>PUBLIED SINCE = </th>
     				<td>{{ i.created|timesince }}</td> 
 					</tr>
+					<td>
+						<a href="{% url 'details' pk=i.id %}">details</a>
+					</td>
 				{% endfor %} 
 				</table>
 	</body>

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm  
 from django.core.exceptions import ValidationError  
 from django.forms.forms import Form
-from django.contrib.auth.models import AbstractUser
 
 class Post(models.Model):
     title = models.CharField(max_length=64)
@@ -14,7 +13,8 @@ class Post(models.Model):
     content = models.TextField()
 
 class Comment(models.Model):
-    author = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     content = models.TextField()
 
